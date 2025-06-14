@@ -7,14 +7,14 @@ import { ErrorsMessageEnum } from 'src/domain/enums/errors-message.enum';
 import { UserRepository } from 'src/infra/db/user.repository';
 import { UserMock } from '../mocks/users/user.mock';
 import { CryptoService } from 'src/infra/crypto/crypto.service';
-import { JWTService } from 'src/infra/jwt/jwt.service';
 import { ProvidersEnum } from 'src/domain/enums/providers.enum';
+import { JwtService } from '@nestjs/jwt';
 
 describe("AuthController (e2e)", () => {
     let app: INestApplication<App>;
     let userRepositoryStub: Partial<UserRepository>;
     let cryptoServiceStub: Partial<CryptoService>;
-    let jwtServiceStub: Partial<JWTService>;
+    let jwtServiceStub: Partial<JwtService>;
     beforeEach(async () => {
         userRepositoryStub = {
             findByEmail: jest.fn().mockResolvedValue(UserMock)
@@ -23,7 +23,7 @@ describe("AuthController (e2e)", () => {
             compare: jest.fn().mockResolvedValue(true)
         }
         jwtServiceStub = {
-            generateToken: jest.fn().mockResolvedValue('TOKEN')
+            signAsync: jest.fn().mockResolvedValue('TOKEN')
         }
 
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -33,7 +33,7 @@ describe("AuthController (e2e)", () => {
             .useValue(userRepositoryStub)
             .overrideProvider(ProvidersEnum.CRYPTO_SERVICE)
             .useValue(cryptoServiceStub)
-            .overrideProvider(ProvidersEnum.JWT_SERVICE)
+            .overrideProvider(JwtService)
             .useValue(jwtServiceStub)
             .compile()
 

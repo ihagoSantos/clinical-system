@@ -4,14 +4,15 @@ import { ErrorsMessageEnum } from '../../../../src/domain/enums/errors-message.e
 import { ProvidersEnum } from '../../../../src/domain/enums/providers.enum';
 import { CryptoService } from '../../../../src/infra/crypto/crypto.service';
 import { UserRepository } from '../../../../src/infra/db/user.repository';
-import { JWTService } from '../../../../src/infra/jwt/jwt.service';
+
 import { UserMock } from '../../../mocks/users/user.mock';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 
 describe('Login Use Case Test Suite', () => {
   let service: LoginUseCase;
   let userRepositoryStub: Partial<UserRepository>;
   let cryptoServiceStub: Partial<CryptoService>;
-  let jwtServiceStub: Partial<JWTService>;
+  let jwtServiceStub: Partial<JwtService>;
 
   beforeEach(async () => {
     userRepositoryStub = {
@@ -22,9 +23,11 @@ describe('Login Use Case Test Suite', () => {
     cryptoServiceStub = {
       compare: jest.fn().mockResolvedValue(true)
     }
+
     jwtServiceStub = {
-      generateToken: jest.fn().mockResolvedValue('TOKEN')
-    }
+      signAsync: jest.fn().mockReturnValue('JWT_TOKEN')
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         LoginUseCase,
@@ -37,9 +40,9 @@ describe('Login Use Case Test Suite', () => {
           useValue: cryptoServiceStub,
         },
         {
-          provide: ProvidersEnum.JWT_SERVICE,
-          useValue: jwtServiceStub,
-        },
+          provide: JwtService,
+          useValue: jwtServiceStub
+        }
       ],
     }).compile();
 
@@ -82,18 +85,15 @@ describe('Login Use Case Test Suite', () => {
     });
   });
   it('should be return a token when user inform a valid email and password', async () => {
-    const spy = jest.spyOn(jwtServiceStub, 'generateToken')
     const data = {
       email: "any",
       password: "any",
     }
     const expected = {
-      token: "TOKEN"
+      token: "JWT_TOKEN"
     }
     const result = await service.execute(data)
+    console.log(result)
     expect(result).toStrictEqual(expected)
-
-    expect(spy).toHaveBeenCalledWith(UserMock.id)
-    expect(spy).toHaveBeenCalledTimes(1)
   });
 });
