@@ -1,21 +1,23 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from '../../../src/application/usecases/auth/auth.usecase';
-import { UserRepository } from '../../../src/infra/db/user.repository';
-import { UserMock } from '../../mocks/users/user.mock';
-import { ProvidersEnum } from '../../../src/domain/enums/providers.enum';
-import { ErrorsMessageEnum } from 'src/domain/enums/errors-message.enum';
-import { CryptoService } from 'src/infra/crypto/crypto.service';
-import { JWTService } from 'src/infra/jwt/jwt.service';
+import { LoginUseCase } from '../../../../src/application/usecases/auth/login.usecase';
+import { ErrorsMessageEnum } from '../../../../src/domain/enums/errors-message.enum';
+import { ProvidersEnum } from '../../../../src/domain/enums/providers.enum';
+import { CryptoService } from '../../../../src/infra/crypto/crypto.service';
+import { UserRepository } from '../../../../src/infra/db/user.repository';
+import { JWTService } from '../../../../src/infra/jwt/jwt.service';
+import { UserMock } from '../../../mocks/users/user.mock';
 
-describe('AuthService', () => {
-  let service: AuthService;
+describe('Login Use Case Test Suite', () => {
+  let service: LoginUseCase;
   let userRepositoryStub: Partial<UserRepository>;
   let cryptoServiceStub: Partial<CryptoService>;
   let jwtServiceStub: Partial<JWTService>;
 
   beforeEach(async () => {
     userRepositoryStub = {
-      findByEmail: jest.fn().mockResolvedValue(UserMock)
+      findByEmail: jest.fn().mockResolvedValue(UserMock
+
+      )
     }
     cryptoServiceStub = {
       compare: jest.fn().mockResolvedValue(true)
@@ -25,7 +27,7 @@ describe('AuthService', () => {
     }
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        AuthService,
+        LoginUseCase,
         {
           provide: ProvidersEnum.USER_REPOSITORY,
           useValue: userRepositoryStub,
@@ -41,7 +43,7 @@ describe('AuthService', () => {
       ],
     }).compile();
 
-    service = module.get<AuthService>(AuthService);
+    service = module.get<LoginUseCase>(LoginUseCase);
 
   });
 
@@ -56,7 +58,7 @@ describe('AuthService', () => {
         email: "any",
         password: "any",
       }
-      await expect(service.login(data))
+      await expect(service.execute(data))
         .rejects
         .toThrow(ErrorsMessageEnum.INVALID_EMAIL_OR_PASSWORD);
 
@@ -71,7 +73,7 @@ describe('AuthService', () => {
         email: "any",
         password: "any",
       }
-      await expect(service.login(data))
+      await expect(service.execute(data))
         .rejects
         .toThrow(ErrorsMessageEnum.INVALID_EMAIL_OR_PASSWORD);
 
@@ -88,7 +90,7 @@ describe('AuthService', () => {
     const expected = {
       token: "TOKEN"
     }
-    const result = await service.login(data)
+    const result = await service.execute(data)
     expect(result).toStrictEqual(expected)
 
     expect(spy).toHaveBeenCalledWith(UserMock.id)

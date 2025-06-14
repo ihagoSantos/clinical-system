@@ -7,7 +7,7 @@ import { ICryptoService } from 'src/domain/contracts/crypto.service';
 import { IJWTService } from 'src/domain/contracts/jwt.service';
 
 @Injectable()
-export class AuthService {
+export class LoginUseCase {
   constructor(
     @Inject(ProvidersEnum.USER_REPOSITORY)
     private readonly userRepository: IUserRepository,
@@ -16,7 +16,7 @@ export class AuthService {
     @Inject(ProvidersEnum.JWT_SERVICE)
     private readonly jwtService: IJWTService,
   ) { }
-  async login({ email, password }: CreateAuthDto): Promise<{ token: string }> {
+  async execute({ email, password }: CreateAuthDto): Promise<{ token: string }> {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {

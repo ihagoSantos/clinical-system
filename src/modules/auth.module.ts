@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from '../application/usecases/auth/auth.usecase';
+import { LoginUseCase } from '../application/usecases/auth/login.usecase';
 import { UserRepository } from 'src/infra/db/user.repository';
 import { ProvidersEnum } from 'src/domain/enums/providers.enum';
 import { CryptoService } from 'src/infra/crypto/crypto.service';
@@ -10,7 +10,7 @@ import { AuthController } from 'src/interfaces/http/auth/auth.controller';
 @Module({
   controllers: [AuthController],
   providers: [
-    AuthService,
+    LoginUseCase,
     {
       provide: ProvidersEnum.USER_REPOSITORY,
       useClass: UserRepository,
@@ -24,6 +24,6 @@ import { AuthController } from 'src/interfaces/http/auth/auth.controller';
       useClass: JWTService
     },
   ],
-  exports: [AuthService]
+  exports: [LoginUseCase]
 })
 export class AuthModule { }
