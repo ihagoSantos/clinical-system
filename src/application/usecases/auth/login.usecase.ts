@@ -31,7 +31,7 @@ export class LoginUseCase {
       userId: user.id
     })
 
-    return { token } as any
+    return { token }
   }
 }
 

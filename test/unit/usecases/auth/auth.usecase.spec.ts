@@ -93,7 +93,7 @@ describe('Login Use Case Test Suite', () => {
       token: "JWT_TOKEN"
     }
     const result = await service.execute(data)
-    console.log(result)
+
     expect(result).toStrictEqual(expected)
   });
 });

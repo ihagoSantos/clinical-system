@@ -6,12 +6,12 @@ import { LoginUseCase } from 'src/application/usecases/auth/login.usecase';
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authService: LoginUseCase
+    private readonly loginUseCase: LoginUseCase
   ) { }
 
   @Post('/login')
   @HttpCode(200)
   login(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.execute(createAuthDto);
+    return this.loginUseCase.execute(createAuthDto);
   }
 }
