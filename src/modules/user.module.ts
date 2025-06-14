@@ -6,4 +6,4 @@ import { UserRepository } from 'src/infra/db/user.repository';
     providers: [UserRepository],
     exports: [UserRepository]
 })
-export class AuthModule { }
+export class UserModule { }

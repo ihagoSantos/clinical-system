@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from '../application/usecases/auth/auth.service';
+import { AuthService } from '../application/usecases/auth/auth.usecase';
 import { UserRepository } from 'src/infra/db/user.repository';
 import { ProvidersEnum } from 'src/domain/enums/providers.enum';
 import { CryptoService } from 'src/infra/crypto/crypto.service';
 import { JWTService } from 'src/infra/jwt/jwt.service';
-// import { AuthController } from './auth.controller';
+import { AuthController } from 'src/interfaces/http/auth/auth.controller';
 
 
 @Module({
+  controllers: [AuthController],
   providers: [
     AuthService,
     {

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from '../../../src/application/usecases/auth/auth.service';
+import { AuthService } from '../../../src/application/usecases/auth/auth.usecase';
 import { UserRepository } from '../../../src/infra/db/user.repository';
 import { UserMock } from '../../mocks/users/user.mock';
 import { ProvidersEnum } from '../../../src/domain/enums/providers.enum';
